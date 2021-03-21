@@ -7,13 +7,6 @@ from datetime import datetime
 import datetime
 import sqlite3
 
-DATABASE_LOCATION = "sqlite:///my_played_tracks.sqlite"
-USER_ID = "31ufoecduolygedb6iqx7uuy7zfe"
-TOKEN = "BQDUfJzBNxSnKW_WyPfWAFhqgwUHEV0Uhim9ek6q4fH1thnSvIJvh1GWT4m3F0rmNJPO6hwOD1sskHgMT_ufHTNG8QFn81cNT-PNNLKKXEVndFiuyMjvRwct0Owflno3MCA1Slbw96rot8jGcD_vN555fA6mALVtK9G3Ddhi"
-
-# Generate your token here: https://developer.spotify.com/console/get-recently-played/
-# Note: Need to login to Spotify
-
 def check_if_valid_data(df: pd.DataFrame) -> bool:
     # Check if DataFrame is empty
     if df.empty:
@@ -41,14 +34,21 @@ def check_if_valid_data(df: pd.DataFrame) -> bool:
     
     return True
 
-if __name__ == "__main__":
+def run_spotify_etl():
+
+    # Generate your token here: https://developer.spotify.com/console/get-recently-played/
+    # Note: Need to login to Spotify
+
+    database_location = "sqlite:///my_played_tracks.sqlite"
+    user_id = "31ufoecduolygedb6iqx7uuy7zfe"
+    token = "BQCGMi08rcRV0hsY8txfEtAdD9Im6GqWBsmVvDd7VT0Q-oKRd1O3DSHwLQXKcJ_OEufpqx341mAQdDbnDgqzegM0--yDlzCoafMKIc-R0Hb4Sw3JvhradSnGOzMBR4wNCV7o5B87pM0C_519Twi1jPQVCU5sBnJxXswSM8hC"
 
     # Extract part of the ETL process
 
     headers = {
         "Accept" : "application/json",
         "Content-Type" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=TOKEN)
+        "Authorization" : "Bearer {token}".format(token=token)
     }
 
     today = datetime.datetime.now()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         print("Data valid, proceed to load stage..")
 
     # Load
-    engine = sqlalchemy.create_engine(DATABASE_LOCATION)
+    engine = sqlalchemy.create_engine(database_location)
     conn = sqlite3.connect('my_played_tracks.sqlite')
     cursor = conn.cursor()
 
